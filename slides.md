@@ -17,7 +17,7 @@ ein interaktiver Workshop mit Max Tharr
 
 1. Introduction
 2. Was meint Serverless?
-3. AWS Serverless Services 
+3. AWS Serverless Stack 
 4. Cloud Development Kit (CDK)
 5. Setup for this workshop
 6. Contribute your own Lambdas!
@@ -36,7 +36,7 @@ Der Begriff wird überall verwendet, aber was ist damit eigentlich gemeint?
 
 ---
 
-# AWS Serverless Services*
+# AWS Serverless Stack* 🥞
 
  *Eine Auswahl
 
@@ -54,9 +54,9 @@ Schnell und billig bei wenigen Aufrufen, aber teuer, wenn man seinen Gesamtworkl
 
 ## SQS (Simple Queue Service) 📬
 
-- Asynchroner messaging service
-- Gut zum decouplen von workloads
-- Gut integriert in andere AWS services
+- Asynchroner Messaging Service
+- Gut zum decouplen von Workloads
+- Gut integriert in andere AWS Services
 
 ----
 
@@ -160,6 +160,8 @@ Danach im Code die Lambda nach euren Wünschen verändern!
 Falls ihr ChatGPT verwenden wollt: Ich habe in der Environment einen API key hinterlegt und ein Beispiel mitgeliefert 😉
 ---
 
-https://github.com/mayflower/telephone-game
+http://aws.tharr.eu
+
+<img src='qrcode.png' width=250 />
 
 ![Logo](mayflower_logo_transparent.png)
