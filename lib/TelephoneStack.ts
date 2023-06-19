@@ -1,6 +1,6 @@
 import * as cdk from 'aws-cdk-lib';
 import { Handler, Tracing } from 'aws-cdk-lib/aws-lambda';
-import { PythonFunction } from '@aws-cdk/aws-lambda-python'
+import { PythonFunction } from '@aws-cdk/aws-lambda-python-alpha'
 
 import { Construct } from 'constructs';
 
@@ -42,23 +42,32 @@ export class TelephoneStack extends cdk.Stack {
     }))
 
     const workerDir = 'workers';
-
-    for (const subdir in readdirSync(workerDir)) {
+    const subdirs = readdirSync(workerDir)
+    subdirs.forEach(subdir => {
       const subpath = path.join(workerDir, subdir)
-      const entry_file = path.join(subpath, 'index.js')
       var myFunc
       if (subdir.includes('py')) {
-        myFunc = new cdk.aws_lambda.Function(this, subdir, {
+        const entry_file = path.join(subpath, 'index.py')
+        myFunc = new PythonFunction(this, subdir, {
           runtime: cdk.aws_lambda.Runtime.PYTHON_3_10,
-          code: cdk.aws_lambda.Code.fromAsset(entry_file),
-          handler: 'lambda_handler'
+          tracing: Tracing.ACTIVE,
+          entry: subpath,
+          handler: "lambda_handler",
+          environment:{
+            QUEUE_URL: entryQueue.queueUrl,
+            OPENAI_API_KEY: process.env.OPENAI_API_KEY ??= "no key"
+          } 
         })
       } else {
+        const entry_file = path.join(subpath, 'index.js')
         myFunc = new cdk.aws_lambda_nodejs.NodejsFunction(this, subdir, {
           runtime: cdk.aws_lambda.Runtime.NODEJS_18_X,
           tracing: Tracing.ACTIVE,
-          handler: 'example.main',
-          entry: entry_file
+          handler: 'index.main',
+          entry: entry_file,
+          environment:{
+            QUEUE_URL: entryQueue.queueUrl
+          } 
         })
       }
       workerQueue.grantConsumeMessages(myFunc)
@@ -68,7 +77,7 @@ export class TelephoneStack extends cdk.Stack {
           maxConcurrency: 2, batchSize: 1
         }
       ))
-    }
+    });
 
     const api = new cdk.aws_apigateway.RestApi(this, "telephone-game-api", {
       restApiName: 'Telephone game',

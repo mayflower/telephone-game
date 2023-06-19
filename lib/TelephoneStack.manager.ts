@@ -1,5 +1,5 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult, SQSRecord } from 'aws-lambda';
-import { SQSClient, SendMessageRequest, SendMessageCommand, MessageSystemAttributeNameForSends, MessageSystemAttributeValue } from "@aws-sdk/client-sqs";
+import { APIGatewayProxyEvent, APIGatewayProxyResult, SQSRecord, SQSEvent } from 'aws-lambda';
+import { SQSClient, SendMessageRequest, SendMessageCommand, SendMessageBatchCommandInput, MessageSystemAttributeNameForSends, MessageSystemAttributeValue } from "@aws-sdk/client-sqs";
 import { Tracer } from '@aws-lambda-powertools/tracer';
 
 /**
@@ -13,14 +13,23 @@ import { Tracer } from '@aws-lambda-powertools/tracer';
  */
 const tracer = new Tracer({serviceName: 'TelephoneGame'});
 
-export const handler = async (event: SQSRecord): Promise<string> => {
+const client = tracer.captureAWSv3Client(new SQSClient({region: 'eu-central-1'}))
 
-      const message = JSON.parse(event.body);
-      if (message.count > 0) {
-        return JSON.stringify({count: message.count -1, message: message.message})
-      } else {
-        throw new Error("Messages empty");
-        
+export const handler = async (event: SQSEvent): Promise<any> => {
+  console.log(event)
+  const message = JSON.parse(event.Records[0].body)
+  if (message) {
+      console.log("sending message to queue: " + message)
+       const input = {
+          MessageBody: JSON.stringify({message: message.message, count: message.count -1}),
+          QueueUrl: process.env.QUEUE_URL,
+          DelaySeconds: 1
+       }
+       const result = await client.send(new SendMessageCommand(input))
+       console.log(result)
+       return {
+          statusCode: 200,
+          body: JSON.stringify(result)
+       }
       }
-    
 };
