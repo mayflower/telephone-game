@@ -1,14 +1,18 @@
-# Welcome to your CDK TypeScript project
+# CDK Telephone
 
-This is a blank project for CDK development with TypeScript.
+This is the repo for an interactive workshop at [CloudLand 2023](https://www.cloudland.org/)!
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
-## Useful commands
+To run the slides, I use [RevealMD](https://github.com/webpro/reveal-md), install it and run
 
-* `npm run build`   compile typescript to js
-* `npm run watch`   watch for changes and compile
-* `npm run test`    perform the jest unit tests
-* `cdk deploy`      deploy this stack to your default AWS account/region
-* `cdk diff`        compare deployed stack with current state
-* `cdk synth`       emits the synthesized CloudFormation template
+```
+reveal-md slides.md --theme solarized
+```
+
+# Contribute!
+
+In `workers`, there is an `js-example` and `py-example`. Copy the folders and rename them, but the new names need to start with `js` or `py` so my CDK stack knows which they are. The names of the files and names of the methods need to stay the same!
+
+Then change the code inside the method to your liking, and change the message the way you want to. You can also use ChatGPT, have a look at workers/py-example-chatqpt
+
+Have fun and ask me if you need help!
