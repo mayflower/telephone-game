@@ -57,12 +57,12 @@ export class TelephoneStack extends cdk.Stack {
         return
       }
       if (subdir.includes('py')) {
-        const entry_file = path.join(subpath, 'index.py')
         myFunc = new PythonFunction(this, subdir, {
           runtime: cdk.aws_lambda.Runtime.PYTHON_3_10,
           tracing: Tracing.ACTIVE,
           entry: subpath,
           handler: "lambda_handler",
+          timeout: cdk.Duration.seconds(30),
           environment:{
             QUEUE_URL: entryQueue.queueUrl,
             OPENAI_API_KEY: process.env.OPENAI_API_KEY ??= "no key"
@@ -75,8 +75,10 @@ export class TelephoneStack extends cdk.Stack {
           tracing: Tracing.ACTIVE,
           handler: 'index.main',
           entry: entry_file,
+          timeout: cdk.Duration.seconds(30),
           environment:{
-            QUEUE_URL: entryQueue.queueUrl
+            QUEUE_URL: entryQueue.queueUrl,
+            OPENAI_API_KEY: process.env.OPENAI_API_KEY ??= "no key"
           } 
         })
       }

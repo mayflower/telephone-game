@@ -94,7 +94,7 @@ export const handler = async (event: SQSEvent): Promise<any> => {
     console.log(response);
     
   }
-  if (message.length < 20) {
+  if (message.length < 200) {
     console.log("sending message to queue: " + message);
     const input: SendMessageCommandInput = {
       MessageBody: message,
