@@ -14,10 +14,9 @@ patch_all()
 
 def change_order(inputstr):
     out = []
-    for index in range(len(inputstr),0,-1):
+    for index in range(len(inputstr)-1,0,-1):
         out.append(inputstr[index])
     return out
-
 
 
 def lambda_handler(event, context):
