@@ -15,18 +15,22 @@ patch_all()
 def lambda_handler(event, context):
     # Retrieve the message payload
     message_body = event['Records'][0]['body']
+
     
     # Print the message payload to CloudWatch Logs
     print(f"Received message: {message_body}")
     
+    message_body += " handled"
     # Process the message payload
     # ...
-    sqs = boto3.resource('sqs')
-    sqs.getc
-
+    client = boto3.client('sqs')
+    queue_url = os.environ["QUEUE_URL"]
+    print(queue_url)
+    response = client.send_message(QueueUrl=queue_url, MessageBody=message_body)
+                                  
     return {
         'statusCode': 200,
-        'body': json.dumps('Message processed successfully')
+        'body': json.dumps(response)
     }
 
 # patch_all()

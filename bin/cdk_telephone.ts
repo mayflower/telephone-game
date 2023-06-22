@@ -20,3 +20,4 @@ const stack = new TelephoneStack(app, 'CdkTelephoneStack', {
   /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
 });
 cdk.Tags.of(stack).add('author','rolle')
+cdk.Tags.of(stack).add("app","cdk-workshop")

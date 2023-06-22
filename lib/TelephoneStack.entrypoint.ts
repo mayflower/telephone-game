@@ -22,7 +22,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
         if (message) {
             console.log("sending message to queue: " + message)
              const input: SendMessageCommandInput = {
-                MessageBody: JSON.stringify({message: message, count: 10}),
+                MessageBody: message,
                 QueueUrl: process.env.QUEUE_URL,
                 DelaySeconds: 1
              }
@@ -32,6 +32,14 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
                 body: JSON.stringify(result)
              }
         }
+    }
+    if (event.httpMethod === "GET") {
+        const message = event.body
+        const querystrings = event.queryStringParameters
+        return {
+            statusCode: 200,
+            body: JSON.stringify(message) + JSON.stringify(querystrings)
+         } 
     }
     throw new Error("Couldn't read message body");
 };
